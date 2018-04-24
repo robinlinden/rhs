@@ -9,7 +9,32 @@ def main
     socket.listen(0)
 
     conn_sock, addr_info = socket.accept
-    puts conn_sock.recv(4096)
+    conn = Connection.new(conn_sock)
+    p conn.read_line
+    p conn.read_line
+    p conn.read_line
+    p conn.read_line
+    p conn.read_line
+end
+
+class Connection
+    def initialize(conn_sock)
+        @conn_sock = conn_sock
+        @buffer = ""
+    end
+
+    def read_line
+        read_until("\r\n")
+    end
+
+    def read_until(end_token)
+        until @buffer.include?(end_token)
+            @buffer += @conn_sock.recv(8)
+        end
+
+        result, @buffer = @buffer.split(end_token, 2)
+        result
+    end
 end
 
 main
