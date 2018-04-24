@@ -10,11 +10,7 @@ def main
 
     conn_sock, addr_info = socket.accept
     conn = Connection.new(conn_sock)
-    p conn.read_line
-    p conn.read_line
-    p conn.read_line
-    p conn.read_line
-    p conn.read_line
+    p read_request(conn)
 end
 
 class Connection
@@ -36,5 +32,14 @@ class Connection
         result
     end
 end
+
+def read_request(conn)
+    request_line = conn.read_line
+    method, path, version = request_line.split(" ", 3)
+    headers = {}
+    Request.new(method, path, headers)
+end
+
+Request = Struct.new(:method, :path, :headers)
 
 main
