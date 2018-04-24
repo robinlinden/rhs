@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+
+require 'socket'
+
+def main
+    socket = Socket.new(:INET, :STREAM)
+    socket.setsockopt(Socket::SOL_SOCKET, Socket::SO_REUSEADDR, true)
+    socket.bind(Addrinfo.tcp("127.0.0.1", 1984))
+    socket.listen(0)
+
+    conn_sock, addr_info = socket.accept
+    puts conn_sock.recv(4096)
+end
+
+main
