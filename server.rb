@@ -51,6 +51,7 @@ Request = Struct.new(:method, :path, :headers)
 
 def respond(conn_sock, status_code, content)
     conn_sock.send("HTTP/1.1 200 OK\r\n", 0)
+    conn_sock.send("Content-Length: #{content.length}\r\n", 0)
     conn_sock.send("\r\n", 0)
     conn_sock.send(content, 0)
 end
