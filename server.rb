@@ -54,6 +54,7 @@ Request = Struct.new(:method, :path, :headers)
 def respond(conn_sock, status_code, content)
     status_text = {
         200 => "OK",
+        403 => "Forbidden",
         404 => "Not Found",
     }.fetch(status_code)
 
@@ -65,7 +66,10 @@ end
 
 def respond_to_request(conn_sock, request)
     path = Dir.getwd + request.path
-    if File.exists?(path)
+    if path.include?("..")
+        content = ""
+        status_code = 403
+    elsif File.exists?(path)
         if File.executable?(path)
             content = `#{path}`
         else
