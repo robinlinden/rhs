@@ -65,8 +65,14 @@ end
 
 def respond_to_request(conn_sock, request)
     path = Dir.getwd + request.path
-    content = File.read(path)
-    status_code = 200
+    if File.exists?(path)
+        content = File.read(path)
+        status_code = 200
+    else
+        content = ""
+        status_code = 404
+    end
+
     respond(conn_sock, status_code, content)
 end
 
