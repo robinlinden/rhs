@@ -10,7 +10,7 @@ def main
 
     conn_sock, addr_info = socket.accept
     conn = Connection.new(conn_sock)
-    p read_request(conn)
+    respond(conn_sock, 200, "content from server")
 end
 
 class Connection
@@ -48,5 +48,11 @@ def read_request(conn)
 end
 
 Request = Struct.new(:method, :path, :headers)
+
+def respond(conn_sock, status_code, content)
+    conn_sock.send("HTTP/1.1 200 OK\r\n", 0)
+    conn_sock.send("\r\n", 0)
+    conn_sock.send(content, 0)
+end
 
 main
