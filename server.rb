@@ -50,7 +50,12 @@ end
 Request = Struct.new(:method, :path, :headers)
 
 def respond(conn_sock, status_code, content)
-    conn_sock.send("HTTP/1.1 200 OK\r\n", 0)
+    status_text = {
+        200 => "OK",
+        404 => "Not Found",
+    }.fetch(status_code)
+
+    conn_sock.send("HTTP/1.1 #{status_code} #{status_text}\r\n", 0)
     conn_sock.send("Content-Length: #{content.length}\r\n", 0)
     conn_sock.send("\r\n", 0)
     conn_sock.send(content, 0)
