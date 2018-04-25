@@ -66,7 +66,11 @@ end
 def respond_to_request(conn_sock, request)
     path = Dir.getwd + request.path
     if File.exists?(path)
-        content = File.read(path)
+        if File.executable?(path)
+            content = `#{path}`
+        else
+            content = File.read(path)
+        end
         status_code = 200
     else
         content = ""
