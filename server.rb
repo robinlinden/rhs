@@ -10,7 +10,9 @@ def main
 
     conn_sock, addr_info = socket.accept
     conn = Connection.new(conn_sock)
-    respond(conn_sock, 200, "content from server")
+
+    request = read_request(conn)
+    respond_to_request(conn_sock, request)
 end
 
 class Connection
@@ -59,6 +61,13 @@ def respond(conn_sock, status_code, content)
     conn_sock.send("Content-Length: #{content.length}\r\n", 0)
     conn_sock.send("\r\n", 0)
     conn_sock.send(content, 0)
+end
+
+def respond_to_request(conn_sock, request)
+    path = Dir.getwd + request.path
+    content = File.read(path)
+    status_code = 200
+    respond(conn_sock, status_code, content)
 end
 
 main
