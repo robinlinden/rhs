@@ -8,11 +8,13 @@ def main
     socket.bind(Addrinfo.tcp("127.0.0.1", 1984))
     socket.listen(0)
 
-    conn_sock, addr_info = socket.accept
-    conn = Connection.new(conn_sock)
+    loop do
+        conn_sock, addr_info = socket.accept
+        conn = Connection.new(conn_sock)
 
-    request = read_request(conn)
-    respond_to_request(conn_sock, request)
+        request = read_request(conn)
+        respond_to_request(conn_sock, request)
+    end
 end
 
 class Connection
